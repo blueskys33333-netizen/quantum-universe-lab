@@ -3,10 +3,11 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+
 from scipy.constants import G, c
 
 # =========================================================
-# QUANTUM UNIVERSE LAB 2.0
+# QUANTUM UNIVERSE LAB v2.1
 # 양자 우주 실험실
 # =========================================================
 
@@ -29,6 +30,9 @@ st.markdown("""
 }
 h1, h2, h3 {
     color: #e8efff !important;
+}
+p, label {
+    color: #c4d0e8;
 }
 div[data-testid="stMetric"] {
     background: rgba(35,52,88,0.45);
@@ -55,26 +59,30 @@ section[data-testid="stSidebar"] {
 # =========================================================
 
 st.title("🌌 양자 우주 실험실")
-st.subheader("초끈이론 · 루프 양자중력 · 블랙홀 · 우주 진화")
+
+st.subheader(
+    "초끈이론 · 루프 양자중력 · 블랙홀 · 중력 렌즈"
+)
 
 st.markdown("""
-**우주의 탄생부터 블랙홀 내부까지 탐구하는 가상 물리 실험실**
+우주의 탄생부터 블랙홀 내부까지 탐구하는
+가상 물리 실험실입니다.
 
 서로 다른 이론적 모형을 적용하고
 시공간의 변화와 우주의 구조를 비교합니다.
 """)
 
-st.caption("QUANTUM UNIVERSE LAB | VERSION 2.0")
+st.caption("QUANTUM UNIVERSE LAB | VERSION 2.1")
 
 st.divider()
 
 # =========================================================
-# 사이드바 설정
+# 사이드바
 # =========================================================
 
 st.sidebar.title("⚙️ 실험 제어실")
 
-st.sidebar.markdown("### 우주 초기 조건")
+st.sidebar.markdown("### 🌌 우주 초기 조건")
 
 duration = st.sidebar.slider(
     "우주 시간 범위",
@@ -86,7 +94,7 @@ time_scale = st.sidebar.slider(
     0.5, 5.0, 2.0, 0.1
 )
 
-st.sidebar.markdown("### 초끈이론 모형")
+st.sidebar.markdown("### 🧬 초끈이론 모형")
 
 string_power = st.sidebar.slider(
     "초끈이론 팽창 지수",
@@ -98,7 +106,7 @@ extra_dimension = st.sidebar.slider(
     0.0, 2.0, 0.5, 0.1
 )
 
-st.sidebar.markdown("### 루프 양자중력 모형")
+st.sidebar.markdown("### 🔵 루프 양자중력 모형")
 
 loop_power = st.sidebar.slider(
     "루프 양자 보정 지수",
@@ -107,16 +115,19 @@ loop_power = st.sidebar.slider(
 
 st.sidebar.divider()
 
-st.sidebar.info(
-    "실험 변수는 교육용 단순화 모형의 매개변수입니다. "
-    "자연계의 측정된 물리 상수와 동일한 값은 아닙니다."
-)
+st.sidebar.info("""
+실험 변수는 교육용 단순화 모형의 매개변수입니다.
+
+실제 자연계의 측정값이나
+확정된 양자중력 이론의 해와는 다릅니다.
+""")
 
 # =========================================================
-# 우주 모형
+# 물리 모형
 # =========================================================
 
 def string_model(t, tau, power):
+
     x = np.asarray(t) / tau
     ax = np.abs(x)
 
@@ -130,17 +141,21 @@ def string_model(t, tau, power):
 
 
 def loop_model(t, tau, power):
+
     x = np.asarray(t) / tau
+
     return (1 + x**2)**power
 
 
 def classical_model(t, tau):
+
     t = np.maximum(np.asarray(t), 0)
+
     return np.sqrt(t / tau)
 
 
 # =========================================================
-# 우주 데이터 계산
+# 우주 계산
 # =========================================================
 
 시간 = np.linspace(-duration, duration, 500)
@@ -180,12 +195,12 @@ def classical_model(t, tau):
 })
 
 # =========================================================
-# 상단 상태판
+# 상태판
 # =========================================================
 
-st.header("📊 우주 상태판")
+st.header("📊 우주 시뮬레이션 상태")
 
-a, b, c1, d = st.columns(4)
+a, b, cc, d = st.columns(4)
 
 a.metric(
     "초끈이론 최소 크기",
@@ -197,7 +212,7 @@ b.metric(
     f"{np.min(루프우주):.3f}"
 )
 
-c1.metric(
+cc.metric(
     "초끈이론 최대 크기",
     f"{np.max(초끈우주):.3f}"
 )
@@ -210,29 +225,31 @@ d.metric(
 st.divider()
 
 # =========================================================
-# 실험실 탭
+# 탭 구성
 # =========================================================
 
 탭 = st.tabs([
     "🌌 우주 이론 비교",
     "🪐 3D 우주 애니메이션",
-    "🕳️ 블랙홀 내부와 특이점",
-    "🧬 추가 차원 실험실",
+    "🕳️ 블랙홀과 특이점",
+    "🔭 중력 렌즈 실험",
+    "🧬 추가 차원",
     "📚 물리 이론과 데이터"
 ])
 
 # =========================================================
-# 탭 1. 우주 이론 비교
+# 1. 우주 이론 비교
 # =========================================================
 
 with 탭[0]:
 
     st.header("🌌 우주 팽창 이론 비교")
 
-    st.write(
-        "초끈이론에서 영감을 얻은 모형, "
-        "루프 양자우주론 모형, 고전 우주를 비교합니다."
-    )
+    st.write("""
+    초끈이론에서 영감을 얻은 모형,
+    루프 양자우주론 모형,
+    고전 우주 모형을 비교합니다.
+    """)
 
     fig = go.Figure()
 
@@ -254,12 +271,17 @@ with 탭[0]:
         x=시간,
         y=고전우주,
         name="고전 우주 모형",
-        line=dict(color="#fbbf24", dash="dash")
+        line=dict(
+            color="#fbbf24",
+            dash="dash",
+            width=2
+        )
     ))
 
     fig.add_vline(
         x=0,
         line_dash="dot",
+        line_color="white",
         annotation_text="바운스 기준 시점"
     )
 
@@ -271,9 +293,12 @@ with 탭[0]:
         hovermode="x unified"
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 
-    st.subheader("우주 팽창률")
+    st.subheader("우주 팽창률 비교")
 
     rate = go.Figure()
 
@@ -298,27 +323,31 @@ with 탭[0]:
         yaxis_title="팽창률 H(t)"
     )
 
-    st.plotly_chart(rate, use_container_width=True)
-
-    st.info(
-        "팽창률은 H = (1/a) da/dt로 정의합니다. "
-        "양수는 팽창, 음수는 수축을 나타냅니다."
+    st.plotly_chart(
+        rate,
+        use_container_width=True
     )
 
+    st.info("""
+    H = (1/a) da/dt
+
+    양수는 팽창, 음수는 수축을 의미합니다.
+    """)
+
 # =========================================================
-# 탭 2. 시간에 따른 3D 우주 애니메이션
+# 2. 3D 우주 애니메이션
 # =========================================================
 
 with 탭[1]:
 
-    st.header("🪐 움직이는 3차원 우주")
+    st.header("🪐 시간에 따라 움직이는 3D 우주")
 
     st.write("""
-    시간이 흐르면서 우주의 크기가 어떻게 변하는지
-    3차원 공간에서 관찰합니다.
+    시간에 따라 우주의 크기가 어떻게 변하는지
+    두 가지 모형으로 비교합니다.
 
-    보라색 구체는 초끈이론에서 영감을 얻은 모형,
-    청록색 구체는 루프 양자중력 모형입니다.
+    보라색은 초끈이론 모형,
+    청록색은 루프 양자중력 모형입니다.
     """)
 
     프레임수 = 36
@@ -327,7 +356,6 @@ with 탭[1]:
         -duration, duration, 프레임수
     )
 
-    # 구체의 표면을 생성
     theta = np.linspace(0, np.pi, 24)
     phi = np.linspace(0, 2*np.pi, 36)
 
@@ -337,31 +365,30 @@ with 탭[1]:
     단위Y = np.sin(THETA) * np.sin(PHI)
     단위Z = np.cos(THETA)
 
-    def 구체좌표(반지름):
+    def 구체좌표(r):
+
         return (
-            반지름 * 단위X,
-            반지름 * 단위Y,
-            반지름 * 단위Z
+            r * 단위X,
+            r * 단위Y,
+            r * 단위Z
         )
 
-    초기시간 = 애니시간[0]
-
-    초기초끈 = float(
+    r1 = float(
         string_model(
-            초기시간, time_scale, string_power
+            애니시간[0], time_scale, string_power
         )
     )
 
-    초기루프 = float(
+    r2 = float(
         loop_model(
-            초기시간, time_scale, loop_power
+            애니시간[0], time_scale, loop_power
         )
     )
 
-    X1, Y1, Z1 = 구체좌표(초기초끈)
-    X2, Y2, Z2 = 구체좌표(초기루프)
+    X1, Y1, Z1 = 구체좌표(r1)
+    X2, Y2, Z2 = 구체좌표(r2)
 
-    애니메이션 = go.Figure(
+    animation = go.Figure(
         data=[
             go.Surface(
                 x=X1,
@@ -390,31 +417,33 @@ with 탭[1]:
         ]
     )
 
-    프레임목록 = []
+    frames = []
 
-    for i, 현재시간 in enumerate(애니시간):
+    for i, t in enumerate(애니시간):
 
-        r1 = float(
+        rr1 = float(
             string_model(
-                현재시간, time_scale, string_power
+                t, time_scale, string_power
             )
         )
 
-        r2 = float(
+        rr2 = float(
             loop_model(
-                현재시간, time_scale, loop_power
+                t, time_scale, loop_power
             )
         )
 
-        xx1, yy1, zz1 = 구체좌표(r1)
-        xx2, yy2, zz2 = 구체좌표(r2)
+        xx1, yy1, zz1 = 구체좌표(rr1)
+        xx2, yy2, zz2 = 구체좌표(rr2)
 
-        프레임목록.append(
+        frames.append(
             go.Frame(
                 name=str(i),
                 data=[
                     go.Surface(
-                        x=xx1, y=yy1, z=zz1,
+                        x=xx1,
+                        y=yy1,
+                        z=zz1,
                         colorscale=[
                             [0, "#312e81"],
                             [1, "#c4b5fd"]
@@ -423,7 +452,9 @@ with 탭[1]:
                         showscale=False
                     ),
                     go.Surface(
-                        x=xx2, y=yy2, z=zz2,
+                        x=xx2,
+                        y=yy2,
+                        z=zz2,
                         colorscale=[
                             [0, "#164e63"],
                             [1, "#67e8f9"]
@@ -435,12 +466,12 @@ with 탭[1]:
             )
         )
 
-    애니메이션.frames = 프레임목록
+    animation.frames = frames
 
-    애니메이션.update_layout(
+    animation.update_layout(
         template="plotly_dark",
         height=650,
-        title="시간에 따른 우주 크기 변화",
+        title="우주의 시간 진화",
         scene=dict(
             xaxis_title="공간 X",
             yaxis_title="공간 Y",
@@ -481,10 +512,7 @@ with 탭[1]:
                                     "duration": 0,
                                     "redraw": False
                                 },
-                                "mode": "immediate",
-                                "transition": {
-                                    "duration": 0
-                                }
+                                "mode": "immediate"
                             }
                         ]
                     )
@@ -522,17 +550,13 @@ with 탭[1]:
     )
 
     st.plotly_chart(
-        애니메이션,
+        animation,
         use_container_width=True
     )
 
-    st.caption(
-        "구체는 공간의 모든 방향을 단순화해 표현한 "
-        "3차원 시각화입니다. 실제 우주의 경계나 모양을 "
-        "나타내는 것은 아닙니다."
-    )
+    st.divider()
 
-    st.subheader("현재 우주 크기 비교")
+    st.subheader("현재 시간의 우주 크기")
 
     현재시점 = st.slider(
         "시간 선택",
@@ -558,40 +582,41 @@ with 탭[1]:
     x, y = st.columns(2)
 
     x.metric(
-        "초끈이론 우주 크기",
+        "초끈이론 우주",
         f"{현재초끈:.4f}"
     )
 
     y.metric(
-        "루프 양자중력 우주 크기",
+        "루프 양자중력 우주",
         f"{현재루프:.4f}"
     )
 
+    st.caption(
+        "구체는 공간 단면을 단순화한 시각적 표현이며 "
+        "실제 우주의 경계나 모양을 뜻하지 않습니다."
+    )
+
 # =========================================================
-# 탭 3. 블랙홀 내부와 특이점
+# 3. 블랙홀과 특이점
 # =========================================================
 
 with 탭[2]:
 
-    st.header("🕳️ 블랙홀 내부와 특이점 실험실")
+    st.header("🕳️ 블랙홀 내부와 특이점 실험")
 
     st.write("""
-    블랙홀의 사건의 지평선과 시공간 곡률을 탐구합니다.
-
-    고전적인 일반상대성이론 모형과
-    특이점을 유한한 곡률로 바꾸어 보는
-    가상 양자중력 보정 모형을 비교합니다.
+    블랙홀의 질량과 사건의 지평선을 계산하고
+    고전적 시공간 곡률과 가상 양자 보정 모형을 비교합니다.
     """)
 
     st.divider()
 
-    st.subheader("블랙홀 조건 설정")
-
     col1, col2 = st.columns(2)
 
     with col1:
+
         질량 = st.slider(
-            "블랙홀 질량 (태양 질량 단위)",
+            "블랙홀 질량 (태양 질량)",
             1.0,
             50.0,
             10.0,
@@ -599,6 +624,7 @@ with 탭[2]:
         )
 
     with col2:
+
         보정길이 = st.slider(
             "가상 양자중력 보정 길이",
             0.05,
@@ -611,11 +637,9 @@ with 탭[2]:
 
     M = 질량 * 태양질량
 
-    슈바르츠실트반지름 = 2 * G * M / c**2
+    rs = 2 * G * M / c**2
 
-    반지름_km = 슈바르츠실트반지름 / 1000
-
-    st.markdown("### 블랙홀 기본 정보")
+    반지름_km = rs / 1000
 
     m1, m2, m3 = st.columns(3)
 
@@ -636,125 +660,103 @@ with 탭[2]:
 
     st.divider()
 
-    st.subheader("1. 블랙홀의 시공간 곡률")
-
-    st.write("""
-    슈바르츠실트 블랙홀의 크레치만 스칼라를
-    이용해 시공간 곡률을 계산합니다.
-    """)
+    st.subheader("시공간 곡률 실험")
 
     st.latex(
         r"K=\frac{48G^2M^2}{c^4r^6}"
     )
 
-    st.write("""
-    사건의 지평선에서 곡률은 유한하지만,
-    고전적인 모형에서는 중심으로 접근할수록
-    곡률이 발산합니다.
-    """)
-
-    # 무차원 반지름 r / rs
     x = np.linspace(0.08, 3.0, 500)
 
-    # K * rs^4 = 12 / x^6
     고전곡률 = 12 / x**6
 
-    # 가상 양자중력 보정 모형
-    # 실제 LQG 방정식에서 유도한 해가 아님
     양자곡률 = 12 / (
         x**6 + 보정길이**6
     )
 
-    곡률그래프 = go.Figure()
+    fig = go.Figure()
 
-    곡률그래프.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
         x=x,
         y=고전곡률,
         name="고전 일반상대성이론",
-        line=dict(
-            color="#f87171",
-            width=3
-        )
+        line=dict(color="#f87171", width=3)
     ))
 
-    곡률그래프.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
         x=x,
         y=양자곡률,
-        name="가상 양자중력 보정 모형",
-        line=dict(
-            color="#38bdf8",
-            width=3
-        )
+        name="가상 양자중력 보정",
+        line=dict(color="#38bdf8", width=3)
     ))
 
-    곡률그래프.add_vline(
+    fig.add_vline(
         x=1,
         line_dash="dash",
-        line_color="white",
         annotation_text="사건의 지평선"
     )
 
-    곡률그래프.update_layout(
+    fig.update_layout(
         template="plotly_dark",
         height=480,
-        xaxis_title="중심으로부터의 거리 / 슈바르츠실트 반지름",
-        yaxis_title="무차원 시공간 곡률 K·rₛ⁴",
-        yaxis_type="log",
-        hovermode="x unified"
+        xaxis_title="중심 거리 / 슈바르츠실트 반지름",
+        yaxis_title="무차원 곡률",
+        yaxis_type="log"
     )
 
     st.plotly_chart(
-        곡률그래프,
+        fig,
         use_container_width=True
     )
 
     st.info("""
-    파란색 곡선은 특이점이 어떻게 완화될 수 있는지
-    탐색하기 위한 현상론적 예시입니다.
+    고전 모형에서는 중심으로 접근할수록
+    곡률이 발산합니다.
 
-    실제 루프 양자중력의 블랙홀 해를 계산한 것은 아닙니다.
+    파란색은 특이점 완화 가능성을 살펴보기 위한
+    임의의 현상론적 모형입니다.
+    실제 루프 양자중력의 해가 아닙니다.
     """)
 
     st.divider()
 
-    st.subheader("2. 블랙홀 구조 탐색")
+    st.subheader("블랙홀 내부 위치 탐색")
 
-    선택반지름 = st.slider(
-        "블랙홀 중심으로부터 거리 (슈바르츠실트 반지름 단위)",
+    위치 = st.slider(
+        "중심으로부터 거리 (슈바르츠실트 반지름 단위)",
         0.1,
         3.0,
         1.5,
         0.05
     )
 
-    if 선택반지름 > 1:
-        st.success("현재 위치: 사건의 지평선 바깥")
-    elif 선택반지름 == 1:
-        st.warning("현재 위치: 사건의 지평선")
+    if 위치 > 1:
+        st.success("사건의 지평선 바깥")
+    elif 위치 == 1:
+        st.warning("사건의 지평선")
     else:
-        st.error("현재 위치: 사건의 지평선 내부")
+        st.error("사건의 지평선 내부")
 
-    고전_선택곡률 = 12 / 선택반지름**6
+    고전값 = 12 / 위치**6
 
-    양자_선택곡률 = 12 / (
-        선택반지름**6 + 보정길이**6
+    양자값 = 12 / (
+        위치**6 + 보정길이**6
     )
 
-    z1, z2 = st.columns(2)
+    q1, q2 = st.columns(2)
 
-    z1.metric(
-        "고전 모형의 곡률",
-        f"{고전_선택곡률:.4e}"
+    q1.metric(
+        "고전 곡률",
+        f"{고전값:.4e}"
     )
 
-    z2.metric(
+    q2.metric(
         "가상 양자 보정 곡률",
-        f"{양자_선택곡률:.4e}"
+        f"{양자값:.4e}"
     )
 
-    st.markdown("### 3. 블랙홀의 물리적 특징")
+    with st.expander("사건의 지평선이란?"):
 
-    with st.expander("사건의 지평선"):
         st.write("""
         사건의 지평선은 외부로 빛이 탈출할 수 없는
         영역의 경계입니다.
@@ -763,49 +765,394 @@ with 탭[2]:
         r = 2GM/c²에 해당합니다.
         """)
 
-    with st.expander("고전적 특이점"):
+    with st.expander("특이점이란?"):
+
         st.write("""
         고전적인 슈바르츠실트 해에서는
-        r = 0에서 곡률 불변량이 발산합니다.
+        중심에서 곡률 불변량이 발산합니다.
 
-        이것은 고전 이론이 그 영역에서
-        더 이상 충분한 설명을 제공하지 못한다는
-        문제를 보여줍니다.
-        """)
-
-    with st.expander("양자중력의 가능성"):
-        st.write("""
-        루프 양자중력과 다른 양자중력 접근법은
-        고전적 특이점 문제를 해결할 가능성을 연구합니다.
-
-        그러나 블랙홀 내부의 실제 물리적 구조가
-        무엇인지는 아직 확정되지 않았습니다.
+        양자중력은 이 문제를 해결할 가능성을 연구하지만
+        실제 블랙홀 내부의 구조는 아직 확정되지 않았습니다.
         """)
 
 # =========================================================
-# 탭 4. 추가 차원
+# 4. 중력 렌즈와 빛의 휘어짐
 # =========================================================
 
 with 탭[3]:
 
+    st.header("🔭 중력 렌즈와 빛의 휘어짐")
+
+    st.write("""
+    블랙홀의 질량이 빛의 경로에 미치는 영향을 탐구합니다.
+
+    약한 중력장 근사와 이상적인 렌즈 배치를 사용한
+    교육용 시뮬레이션입니다.
+    """)
+
+    st.divider()
+
+    st.subheader("블랙홀 조건 설정")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        렌즈질량 = st.slider(
+            "렌즈 블랙홀 질량 (태양 질량)",
+            1.0,
+            100.0,
+            10.0,
+            1.0,
+            key="렌즈_질량"
+        )
+
+    with col2:
+
+        렌즈간격 = st.slider(
+            "빛의 경로 간격",
+            0.2,
+            1.0,
+            0.4,
+            0.1
+        )
+
+    M_lens = 렌즈질량 * 1.98847e30
+
+    rs_lens = 2 * G * M_lens / c**2
+
+    st.metric(
+        "렌즈 블랙홀 슈바르츠실트 반지름",
+        f"{rs_lens/1000:.2f} km"
+    )
+
+    st.divider()
+
+    st.subheader("1. 빛의 휘어짐 각도")
+
+    st.latex(
+        r"\alpha \approx \frac{4GM}{c^2b}"
+    )
+
+    st.write("""
+    약한 중력장 근사에서 빛의 편향각입니다.
+    b는 충돌 매개변수입니다.
+    """)
+
+    충돌거리 = np.linspace(4, 12, 250)
+
+    편향각 = 2 / 충돌거리
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=충돌거리,
+        y=np.degrees(편향각),
+        mode="lines",
+        name="빛의 편향각",
+        line=dict(color="#38bdf8", width=3)
+    ))
+
+    fig.update_layout(
+        template="plotly_dark",
+        height=400,
+        xaxis_title="충돌 매개변수 (슈바르츠실트 반지름 단위)",
+        yaxis_title="편향각 (도)"
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+    st.caption(
+        "강한 중력장에 가까운 광선에는 이 근사식이 정확하지 않습니다."
+    )
+
+    st.divider()
+
+    st.subheader("2. 3차원 광선 경로")
+
+    st.write("""
+    블랙홀 주변을 통과하는 빛의 경로를
+    단순화된 광선 방정식으로 시각화합니다.
+    """)
+
+    # 무차원 좌표: 길이 단위는 슈바르츠실트 반지름
+    # y'' = -y/(x²+y²)^(3/2)
+    # 약한 중력장 근사
+    def 광선계산(b, x_start=-30, x_end=30, steps=600):
+
+        xs = np.linspace(x_start, x_end, steps)
+
+        dx = xs[1] - xs[0]
+
+        y = np.zeros(steps)
+        v = np.zeros(steps)
+
+        y[0] = b
+        v[0] = 0.0
+
+        def acceleration(x, y_value):
+            r2 = x*x + y_value*y_value
+            return -y_value / (r2**1.5 + 1e-12)
+
+        for i in range(steps - 1):
+
+            x = xs[i]
+            yy = y[i]
+            vv = v[i]
+
+            k1y = vv
+            k1v = acceleration(x, yy)
+
+            k2y = vv + 0.5*dx*k1v
+            k2v = acceleration(
+                x + 0.5*dx,
+                yy + 0.5*dx*k1y
+            )
+
+            k3y = vv + 0.5*dx*k2v
+            k3v = acceleration(
+                x + 0.5*dx,
+                yy + 0.5*dx*k2y
+            )
+
+            k4y = vv + dx*k3v
+            k4v = acceleration(
+                x + dx,
+                yy + dx*k3y
+            )
+
+            y[i+1] = yy + dx * (
+                k1y + 2*k2y + 2*k3y + k4y
+            ) / 6
+
+            v[i+1] = vv + dx * (
+                k1v + 2*k2v + 2*k3v + k4v
+            ) / 6
+
+        return xs, y
+
+    광선그림 = go.Figure()
+
+    # 블랙홀 표시
+    theta = np.linspace(0, np.pi, 35)
+    phi = np.linspace(0, 2*np.pi, 50)
+
+    TH, PH = np.meshgrid(theta, phi)
+
+    BX = np.sin(TH) * np.cos(PH)
+    BY = np.sin(TH) * np.sin(PH)
+    BZ = np.cos(TH)
+
+    광선그림.add_trace(go.Surface(
+        x=BX,
+        y=BY,
+        z=BZ,
+        colorscale=[
+            [0, "#050505"],
+            [1, "#454545"]
+        ],
+        showscale=False,
+        opacity=1,
+        name="블랙홀"
+    ))
+
+    광선색상 = [
+        "#fbbf24",
+        "#38bdf8",
+        "#a78bfa",
+        "#f472b6",
+        "#34d399",
+        "#fb923c",
+        "#e879f9"
+    ]
+
+    for i, b in enumerate(
+        np.arange(-3, 4) * 렌즈간격 + 5
+    ):
+
+        # 너무 작은 충돌 매개변수는 제외
+        if b < 4:
+            continue
+
+        xx, yy = 광선계산(b)
+
+        광선그림.add_trace(go.Scatter3d(
+            x=xx,
+            y=yy,
+            z=np.zeros_like(xx),
+            mode="lines",
+            name=f"광선 {i+1}",
+            line=dict(
+                color=광선색상[i],
+                width=5
+            )
+        ))
+
+    광선그림.update_layout(
+        template="plotly_dark",
+        height=650,
+        scene=dict(
+            xaxis_title="공간 X",
+            yaxis_title="공간 Y",
+            zaxis_title="공간 Z",
+            aspectmode="cube"
+        )
+    )
+
+    st.plotly_chart(
+        광선그림,
+        use_container_width=True
+    )
+
+    st.caption(
+        "무차원 약한 중력장 광선 모델입니다. "
+        "정확한 강한 중력장 광선 추적은 슈바르츠실트 "
+        "시공간의 영측지선 방정식을 풀어야 합니다."
+    )
+
+    st.divider()
+
+    st.subheader("3. 아인슈타인 고리 실험")
+
+    st.write("""
+    광원과 관측자 사이에 렌즈가 있고
+    세 천체가 정확히 정렬된 이상적인 상황을 가정합니다.
+    """)
+
+    거리1 = st.slider(
+        "관측자에서 렌즈까지 거리 (Mpc)",
+        1.0,
+        1000.0,
+        100.0,
+        1.0
+    )
+
+    거리2 = st.slider(
+        "렌즈에서 광원까지 거리 (Mpc)",
+        1.0,
+        1000.0,
+        200.0,
+        1.0
+    )
+
+    Mpc = 3.085677581491367e22
+
+    Dl = 거리1 * Mpc
+    Dls = 거리2 * Mpc
+    Ds = Dl + Dls
+
+    theta_E = np.sqrt(
+        (4 * G * M_lens / c**2)
+        * Dls / (Dl * Ds)
+    )
+
+    theta_arcsec = (
+        np.degrees(theta_E) * 3600
+    )
+
+    st.metric(
+        "아인슈타인 각반지름",
+        f"{theta_arcsec:.8f} 초각"
+    )
+
+    angle = np.linspace(
+        0, 2*np.pi, 300
+    )
+
+    ring = go.Figure()
+
+    ring.add_trace(go.Scatter(
+        x=theta_arcsec*np.cos(angle),
+        y=theta_arcsec*np.sin(angle),
+        mode="lines",
+        name="아인슈타인 고리",
+        line=dict(
+            color="#fbbf24",
+            width=4
+        )
+    ))
+
+    ring.add_trace(go.Scatter(
+        x=[0],
+        y=[0],
+        mode="markers",
+        name="렌즈 중심",
+        marker=dict(
+            size=12,
+            color="#111111",
+            line=dict(
+                color="white",
+                width=2
+            )
+        )
+    ))
+
+    ring.update_layout(
+        template="plotly_dark",
+        height=450,
+        xaxis_title="각도 (초각)",
+        yaxis_title="각도 (초각)",
+        yaxis=dict(
+            scaleanchor="x",
+            scaleratio=1
+        )
+    )
+
+    st.plotly_chart(
+        ring,
+        use_container_width=True
+    )
+
+    st.success(
+        "이상적인 아인슈타인 고리 계산 완료"
+    )
+
+    with st.expander("중력 렌즈란?"):
+
+        st.write("""
+        질량을 가진 천체는 시공간을 휘게 합니다.
+
+        빛은 휘어진 시공간을 따라 이동하기 때문에
+        외부 관측자에게 빛의 방향이 바뀐 것처럼 보입니다.
+        """)
+
+    with st.expander("아인슈타인 고리란?"):
+
+        st.write("""
+        광원, 렌즈, 관측자가 정확하게 정렬되면
+        빛이 고리 형태의 상을 만들 수 있습니다.
+        """)
+
+# =========================================================
+# 5. 추가 차원 실험실
+# =========================================================
+
+with 탭[4]:
+
     st.header("🧬 추가 차원 실험실")
 
     st.write("""
-    초끈이론에서 연구되는 추가 공간 차원의
-    상대적 크기 변화를 탐구합니다.
+    초끈이론에서는 우리가 경험하는 공간 외에
+    추가 공간 차원이 존재할 가능성을 연구합니다.
     """)
 
-    차원그래프 = go.Figure()
+    fig = go.Figure()
 
-    차원그래프.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
         x=시간,
         y=추가차원,
         name="추가 차원 크기 지표",
         fill="tozeroy",
-        line=dict(color="#f472b6", width=3)
+        line=dict(
+            color="#f472b6",
+            width=3
+        )
     ))
 
-    차원그래프.update_layout(
+    fig.update_layout(
         template="plotly_dark",
         height=400,
         xaxis_title="시간",
@@ -813,32 +1160,34 @@ with 탭[3]:
     )
 
     st.plotly_chart(
-        차원그래프,
+        fig,
         use_container_width=True
     )
 
-    q1, q2 = st.columns(2)
+    x, y = st.columns(2)
 
-    q1.metric(
+    x.metric(
         "초기 추가 차원 지표",
         f"{추가차원[0]:.3f}"
     )
 
-    q2.metric(
+    y.metric(
         "최종 추가 차원 지표",
         f"{추가차원[-1]:.3f}"
     )
 
-    st.info(
-        "이 값은 실제 칼라비-야우 다양체의 크기 계산이 아닌 "
-        "교육용 상대 크기 지표입니다."
-    )
+    st.info("""
+    이 그래프는 추가 차원의 상대적 크기를 표현한
+    교육용 모형입니다.
+
+    실제 칼라비-야우 공간의 해를 계산한 것은 아닙니다.
+    """)
 
 # =========================================================
-# 탭 5. 물리 이론과 데이터
+# 6. 물리 이론과 데이터
 # =========================================================
 
-with 탭[4]:
+with 탭[5]:
 
     st.header("📚 물리 이론 자료실")
 
@@ -849,10 +1198,8 @@ with 탭[4]:
     )
 
     st.write("""
-    비특이 우주 바운스의 형태를 보여 주는
+    비특이 우주 바운스 형태를 나타내는
     현상론적 모형입니다.
-
-    정식 초끈이론의 완전한 우주론 해는 아닙니다.
     """)
 
     st.divider()
@@ -864,22 +1211,17 @@ with 탭[4]:
     )
 
     st.write("""
-    우주 크기가 0에 도달하지 않고
-    최소 크기를 갖는 바운스 형태를 표현합니다.
+    양자 보정으로 인해 우주의 크기가
+    0에 도달하지 않는 형태를 표현합니다.
     """)
 
     st.divider()
 
-    st.subheader("고전 우주 모형")
+    st.subheader("고전 복사 지배 우주")
 
     st.latex(
         r"a_C(t)\propto\sqrt{t},\quad t>0"
     )
-
-    st.write("""
-    복사 지배 우주의 고전적인 팽창 모형입니다.
-    t = 0에서 고전적 특이점을 갖습니다.
-    """)
 
     st.divider()
 
@@ -889,14 +1231,17 @@ with 탭[4]:
         r"K=\frac{48G^2M^2}{c^4r^6}"
     )
 
-    st.write("""
-    슈바르츠실트 블랙홀의 시공간 곡률을 나타내는
-    크레치만 스칼라입니다.
-    """)
+    st.divider()
+
+    st.subheader("중력 렌즈")
+
+    st.latex(
+        r"\alpha\approx\frac{4GM}{c^2b}"
+    )
 
     st.divider()
 
-    st.subheader("📊 우주 실험 데이터")
+    st.subheader("실험 데이터")
 
     st.dataframe(
         우주데이터,
@@ -930,7 +1275,7 @@ st.markdown("""
 
 <br><br>
 
-초끈이론 · 루프 양자중력 · 블랙홀 · 우주론
+초끈이론 · 루프 양자중력 · 블랙홀 · 중력 렌즈
 
 <br>
 
@@ -938,7 +1283,7 @@ st.markdown("""
 
 <br><br>
 
-VERSION 2.0
+VERSION 2.1
 
 </div>
 """, unsafe_allow_html=True)
